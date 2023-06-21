@@ -82,9 +82,9 @@ function adapter.is_test_file(file_path)
 
   if string.match(file_path, "__tests__") then
     is_test_file = true
-  elseif string.match(file_path, "tests") then
+  elseif string.match(file_path, "tests/") then
     is_test_file = true
-  elseif string.match(file_path, "test") then
+  elseif string.match(file_path, "test/") then
     is_test_file = true
   else
     for _, x in ipairs({ "spec", "test" }) do
