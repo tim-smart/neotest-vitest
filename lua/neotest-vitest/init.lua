@@ -82,16 +82,21 @@ function adapter.is_test_file(file_path)
 
   if string.match(file_path, "__tests__") then
     is_test_file = true
-  end
-
-  for _, x in ipairs({ "spec", "test" }) do
-    for _, ext in ipairs({ "js", "jsx", "coffee", "ts", "tsx" }) do
-      if string.match(file_path, "%." .. x .. "%." .. ext .. "$") then
-        is_test_file = true
-        goto matched_pattern
+  elseif string.match(file_path, "tests") then
+    is_test_file = true
+  elseif string.match(file_path, "test") then
+    is_test_file = true
+  else
+    for _, x in ipairs({ "spec", "test" }) do
+      for _, ext in ipairs({ "js", "jsx", "coffee", "ts", "tsx" }) do
+        if string.match(file_path, "%." .. x .. "%." .. ext .. "$") then
+          is_test_file = true
+          goto matched_pattern
+        end
       end
     end
   end
+
   ::matched_pattern::
   return is_test_file and hasVitestDependency(file_path)
 end
@@ -201,16 +206,16 @@ end
 local function escapeTestPattern(s)
   return (
     s:gsub("%(", "%\\(")
-      :gsub("%)", "%\\)")
-      :gsub("%]", "%\\]")
-      :gsub("%[", "%\\[")
-      :gsub("%*", "%\\*")
-      :gsub("%+", "%\\+")
-      :gsub("%-", "%\\-")
-      :gsub("%?", "%\\?")
-      :gsub("%$", "%\\$")
-      :gsub("%^", "%\\^")
-      :gsub("%/", "%\\/")
+    :gsub("%)", "%\\)")
+    :gsub("%]", "%\\]")
+    :gsub("%[", "%\\[")
+    :gsub("%*", "%\\*")
+    :gsub("%+", "%\\+")
+    :gsub("%-", "%\\-")
+    :gsub("%?", "%\\?")
+    :gsub("%$", "%\\$")
+    :gsub("%^", "%\\^")
+    :gsub("%/", "%\\/")
   )
 end
 
@@ -246,10 +251,10 @@ end
 
 local function cleanAnsi(s)
   return s:gsub("\x1b%[%d+;%d+;%d+;%d+;%d+m", "")
-    :gsub("\x1b%[%d+;%d+;%d+;%d+m", "")
-    :gsub("\x1b%[%d+;%d+;%d+m", "")
-    :gsub("\x1b%[%d+;%d+m", "")
-    :gsub("\x1b%[%d+m", "")
+      :gsub("\x1b%[%d+;%d+;%d+;%d+m", "")
+      :gsub("\x1b%[%d+;%d+;%d+m", "")
+      :gsub("\x1b%[%d+;%d+m", "")
+      :gsub("\x1b%[%d+m", "")
 end
 
 local function parsed_json_to_results(data, output_file, consoleOut)
